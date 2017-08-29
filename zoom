@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+import argparse
+import webbrowser
+import sys
+
+PREFIX = "https://zoom.us/j/"
+MAP = {'Kiran':         '4382730545',
+       'Matt':          '9448411984',
+       'Dog':           '7931831933',
+       'opsroundtable': '548453237',
+       'puppetng':      'my/plambert',
+       'standup':       '217901330',
+       'team':          '6554365543',
+       }
+
+UMAP = "KEYWORD ALIASES:\n"
+for key, val in MAP.iteritems():
+    UMAP = UMAP + "{0}: {1}\n".format(key.ljust(20), val)
+
+parser = argparse.ArgumentParser(description="Zoom call wrapper", epilog=UMAP,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+parser.add_argument('id', metavar='ID', nargs='?', type=str, default=None,
+                    help='Zoom id with or without dashes. May also accept a keyword KEYORD ALIASES from below:')
+parser.add_argument('-t', '--test',     action='store_true', help='Test mode, print url only')
+args = parser.parse_args()
+
+if not args.id:
+    parser.print_help()
+    sys.exit(1)
+
+if args.id in MAP:
+    url = "{0}{1}".format(PREFIX, MAP[args.id].replace('-', ''))
+else:
+    url = "{0}{1}".format(PREFIX, args.id.replace('-', ''))
+if args.test:
+    print url
+else:
+    webbrowser.open_new(url)
